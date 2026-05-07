@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ✦ Upasana Prabhakar — Portfolio Website
 
-## Getting Started
+> A cinematic, space-themed developer portfolio built with Next.js, Three.js, and GSAP — featuring a live 3D horizon scene, scroll-driven camera animation, and production-grade content.
 
-First, run the development server:
+&nbsp;
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✦ Live Demo
+
+**[upasanaprabhakar.vercel.app](https://upasanaprabhakar.vercel.app)** &nbsp;·&nbsp; *Best experienced on desktop*
+
+&nbsp;
+
+## ✦ Preview
+
+![Portfolio Hero — Upasana Prabhakar](./preview.png)
+
+&nbsp;
+
+## ✦ Features
+
+**3D Canvas (Three.js)**
+- Fixed horizon scene with 4-layer parallax mountains and procedural silhouettes
+- 15,000 star particles across 3 depth layers with per-layer rotation speed
+- Animated nebula shader with color bleeding and elevation distortion
+- Atmospheric glow sphere with pulsing bloom
+- Shooting stars — procedurally spawned, trail-faded, fully cleaned up
+- Scroll-driven camera interpolation across 3 waypoints (Horizon → Cosmos → Infinity)
+- Mouse parallax — live camera tilt as cursor moves across the hero, fades on scroll
+- UnrealBloomPass post-processing with tuned strength, radius, and threshold
+
+**UI / UX**
+- Custom glowing cursor with a lagging ring that trails at 12% lerp speed
+- Right-side navigation dots with section labels — click to jump
+- Scroll progress bar with section counter
+- GSAP character-split hero entrance animation
+- Per-section reveal animations (scroll-triggered slide-up)
+- Glassmorphism project, skill, and cert cards with accent-colored inner glow
+- Spiral intro overlay with fade-out transition
+
+**Content**
+- About section with two-column layout, stat callouts, and experience card
+- Skills grid across 6 categories
+- 3 featured projects with tech chips, bullet points, and live links
+- 4 certifications with verified LinkedIn credential links
+- Contact beacon with glowing CTA button
+
+&nbsp;
+
+## ✦ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| 3D Engine | Three.js r155+ |
+| Animation | GSAP 3 + ScrollTrigger |
+| Post-Processing | three/examples — EffectComposer, UnrealBloomPass |
+| Styling | CSS Modules / Global CSS |
+| Fonts | Clash Display, Syne, JetBrains Mono |
+| Deployment | Vercel |
+
+&nbsp;
+
+## ✦ Project Structure
+
+```
+src/
+│
+├── app/
+│   ├── page.tsx               # Root page
+│   ├── globals.css            # All styles
+│   └── layout.tsx             # Fonts & metadata
+│
+├── components/
+│   ├── Portfolio.tsx          # Three.js scene + all sections
+│   └── SpiralAnimation.tsx    # Intro overlay
+│
+public/
+│   └── preview.png            # OG image
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+&nbsp;
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✦ Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Prerequisites:** Node.js 18+, npm or yarn
 
-## Learn More
+```bash
+# 1. Clone the repo
+git clone https://github.com/upasanaprabhakar/portfolio.git
+cd portfolio
 
-To learn more about Next.js, take a look at the following resources:
+# 2. Install dependencies
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 3. Start the dev server
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+&nbsp;
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ✦ Key Implementation Details
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Scroll-driven camera** — As you scroll, the 3D camera smoothly travels between three positions in space — from the horizon, through the cosmos, into deep infinity. The movement is eased each frame so it never feels abrupt.
+
+- **Mouse parallax** — Moving your cursor gently tilts the entire scene — stars, mountains, and camera all shift slightly. This effect fades away naturally as you scroll down, so it only lives in the hero.
+
+- **Shooting stars** — Stars spawn randomly, streak across the sky with a glowing trail, then fade out and disappear. Each one is fully removed from memory after it finishes so nothing builds up over time.
+
+- **Glassmorphism cards** — Project and cert cards use a frosted-glass effect with a blurred dark background. Each card picks up the accent color of its content for its border glow, making every card feel distinct.
+
+- **Custom cursor** — A small glowing dot follows your mouse instantly. A larger ring chases it with a slight delay, giving the cursor a smooth, fluid feel that matches the space aesthetic.
+
+&nbsp;
+
+## ✦ Customization
+
+To adapt this for your own portfolio, update the data arrays at the top of `Portfolio.tsx`:
+
+```ts
+const PROJECTS = [ ... ]   // your projects
+const SKILLS   = [ ... ]   // your skill categories
+const CERTS    = [ ... ]   // your certifications + LinkedIn links
+```
+
+Colors and typography live in `globals.css` under the clearly labeled section comments.
+
+&nbsp;
+
+## ✦ About Me
+
+**Upasana Prabhakar** — Full-Stack Developer & AI Systems Builder
+
+B.Tech CSE · Rayat Bahra University · CGPA 8.6 · Graduating 2027
+
+Top 7 · HackFest 2 · GDG Cloud New Delhi · 500+ participants
+
+[upasanaprabhakar35@gmail.com](mailto:upasanaprabhakar35@gmail.com) &nbsp;·&nbsp;
+[github.com/upasanaprabhakar](https://github.com/upasanaprabhakar) &nbsp;·&nbsp;
+[linkedin.com/in/upasana-prabhakar-634224296](https://linkedin.com/in/upasana-prabhakar-634224296)
+
+&nbsp;
+
+## ✦ License
+
+MIT — feel free to fork and adapt. A credit or star is appreciated but not required.
+
+&nbsp;
+
+*Built in deep space. Deployed on Vercel. &nbsp;✦*
