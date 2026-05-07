@@ -59,12 +59,12 @@ const PROJECTS = [
 ];
 
 const SKILLS = [
-  { label: 'Languages',  value: 'JavaScript · Python · C++ · SQL · HTML5 · CSS3' },
-  { label: 'Frontend',   value: 'React.js · Next.js · Redux · Tailwind CSS' },
-  { label: 'Backend',    value: 'Node.js · Express.js · REST APIs · WebSockets · Socket.io · Prisma ORM' },
-  { label: 'Databases',  value: 'PostgreSQL · MongoDB · Supabase · NoSQL' },
-  { label: 'AI / ML',    value: 'LLM Integration · Multi-Agent Systems · Groq API · Scikit-learn · Pandas' },
-  { label: 'Tools',      value: 'Git · JWT Auth · API Optimization · Vercel · Render · System Design' },
+  { label: 'Languages', value: 'JavaScript · Python · C++ · SQL · HTML5 · CSS3' },
+  { label: 'Frontend', value: 'React.js · Next.js · Redux · Tailwind CSS' },
+  { label: 'Backend', value: 'Node.js · Express.js · REST APIs · WebSockets · Socket.io · Prisma ORM' },
+  { label: 'Databases', value: 'PostgreSQL · MongoDB · Supabase · NoSQL' },
+  { label: 'AI / ML', value: 'LLM Integration · Multi-Agent Systems · Groq API · Scikit-learn · Pandas' },
+  { label: 'Tools', value: 'Git · JWT Auth · API Optimization · Vercel · Render · System Design' },
 ];
 
 const CERTS = [
@@ -80,11 +80,11 @@ const NAV_SECTIONS = ['Hero', 'About', 'Skills', 'Work', 'Certs', 'Contact'];
 // ─── Custom Cursor ─────────────────────────────────────────────────────────────
 function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const trailRef  = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const cursor = cursorRef.current;
-    const trail  = trailRef.current;
+    const trail = trailRef.current;
     if (!cursor || !trail) return;
 
     let mx = 0, my = 0;
@@ -95,14 +95,14 @@ function CustomCursor() {
       mx = e.clientX;
       my = e.clientY;
       cursor.style.left = `${mx}px`;
-      cursor.style.top  = `${my}px`;
+      cursor.style.top = `${my}px`;
     };
 
     const animate = () => {
       tx += (mx - tx) * 0.12;
       ty += (my - ty) * 0.12;
       trail.style.left = `${tx}px`;
-      trail.style.top  = `${ty}px`;
+      trail.style.top = `${ty}px`;
       raf = requestAnimationFrame(animate);
     };
 
@@ -124,8 +124,8 @@ function CustomCursor() {
 
   return (
     <>
-      <div ref={cursorRef}  className="cursor-dot" />
-      <div ref={trailRef}   className="cursor-trail" />
+      <div ref={cursorRef} className="cursor-dot" />
+      <div ref={trailRef} className="cursor-trail" />
     </>
   );
 }
@@ -232,10 +232,10 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Portfolio() {
-  const canvasRef    = useRef<HTMLCanvasElement>(null);
-  const titleRef     = useRef<HTMLHeadingElement>(null);
-  const subtitleRef  = useRef<HTMLDivElement>(null);
-  const menuRef      = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const scrollProgressRef = useRef<HTMLDivElement>(null);
 
   // ---------- Three.js refs ----------
@@ -291,28 +291,28 @@ export default function Portfolio() {
       const geo = new THREE.BufferGeometry();
       const pos = new Float32Array(count * 3);
       const col = new Float32Array(count * 3);
-      const sz  = new Float32Array(count);
+      const sz = new Float32Array(count);
 
       for (let j = 0; j < count; j++) {
-        const r     = 200 + Math.random() * 800;
+        const r = 200 + Math.random() * 800;
         const theta = Math.random() * Math.PI * 2;
-        const phi   = Math.acos(Math.random() * 2 - 1);
-        pos[j*3]   = r * Math.sin(phi) * Math.cos(theta);
-        pos[j*3+1] = r * Math.sin(phi) * Math.sin(theta);
-        pos[j*3+2] = r * Math.cos(phi);
+        const phi = Math.acos(Math.random() * 2 - 1);
+        pos[j * 3] = r * Math.sin(phi) * Math.cos(theta);
+        pos[j * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+        pos[j * 3 + 2] = r * Math.cos(phi);
 
         const c = new THREE.Color();
         const pick = Math.random();
-        if (pick < 0.7)       c.setHSL(0, 0, 0.8 + Math.random() * 0.2);
-        else if (pick < 0.9)  c.setHSL(0.08, 0.5, 0.8);
-        else                  c.setHSL(0.6,  0.5, 0.8);
-        col[j*3] = c.r; col[j*3+1] = c.g; col[j*3+2] = c.b;
+        if (pick < 0.7) c.setHSL(0, 0, 0.8 + Math.random() * 0.2);
+        else if (pick < 0.9) c.setHSL(0.08, 0.5, 0.8);
+        else c.setHSL(0.6, 0.5, 0.8);
+        col[j * 3] = c.r; col[j * 3 + 1] = c.g; col[j * 3 + 2] = c.b;
         sz[j] = Math.random() * 2 + 0.5;
       }
 
       geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
-      geo.setAttribute('size',     new THREE.BufferAttribute(sz,  1));
+      geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      geo.setAttribute('size', new THREE.BufferAttribute(sz, 1));
 
       const mat = new THREE.ShaderMaterial({
         uniforms: { time: { value: 0 }, depth: { value: layer } },
@@ -356,9 +356,9 @@ export default function Portfolio() {
     const nebGeo = new THREE.PlaneGeometry(8000, 4000, 100, 100);
     const nebMat = new THREE.ShaderMaterial({
       uniforms: {
-        time:    { value: 0 },
-        color1:  { value: new THREE.Color(0x0033ff) },
-        color2:  { value: new THREE.Color(0xff0066) },
+        time: { value: 0 },
+        color1: { value: new THREE.Color(0x0033ff) },
+        color2: { value: new THREE.Color(0xff0066) },
         opacity: { value: 0.12 },
       },
       vertexShader: `
@@ -401,10 +401,10 @@ export default function Portfolio() {
 
     // ── Mountains (4 parallax layers) ──
     const mlayers = [
-      { distance: -50,  height: 60,  color: 0x1a1a2e, opacity: 1   },
-      { distance: -100, height: 80,  color: 0x16213e, opacity: 0.8  },
-      { distance: -150, height: 100, color: 0x0f3460, opacity: 0.6  },
-      { distance: -200, height: 120, color: 0x0a4668, opacity: 0.4  },
+      { distance: -50, height: 60, color: 0x1a1a2e, opacity: 1 },
+      { distance: -100, height: 80, color: 0x16213e, opacity: 0.8 },
+      { distance: -150, height: 100, color: 0x0f3460, opacity: 0.6 },
+      { distance: -200, height: 120, color: 0x0a4668, opacity: 0.4 },
     ];
 
     mlayers.forEach((layer, idx) => {
@@ -412,15 +412,15 @@ export default function Portfolio() {
       for (let i = 0; i <= 50; i++) {
         const x = (i / 50 - 0.5) * 1000;
         const y = Math.sin(i * 0.1) * layer.height
-                + Math.sin(i * 0.05) * layer.height * 0.5
-                + Math.random() * layer.height * 0.2
-                - 100;
+          + Math.sin(i * 0.05) * layer.height * 0.5
+          + Math.random() * layer.height * 0.2
+          - 100;
         pts.push(new THREE.Vector2(x, y));
       }
       pts.push(new THREE.Vector2(5000, -300), new THREE.Vector2(-5000, -300));
 
       const shape = new THREE.Shape(pts);
-      const mesh  = new THREE.Mesh(
+      const mesh = new THREE.Mesh(
         new THREE.ShapeGeometry(shape),
         new THREE.MeshBasicMaterial({
           color: layer.color,
@@ -598,7 +598,7 @@ export default function Portfolio() {
   // ── Mouse parallax listener ──
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      threeRefs.current.mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
+      threeRefs.current.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
       threeRefs.current.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     };
     window.addEventListener('mousemove', onMouseMove);
@@ -655,7 +655,7 @@ export default function Portfolio() {
   // ── Scroll → camera ──
   useEffect(() => {
     const handleScroll = () => {
-      const refs    = threeRefs.current;
+      const refs = threeRefs.current;
       const scrollY = window.scrollY;
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
@@ -673,24 +673,24 @@ export default function Portfolio() {
       });
       setActiveNavDot(activeDot);
 
-      const totalProgress   = progress * totalSections;
+      const totalProgress = progress * totalSections;
       const sectionProgress = totalProgress % 1;
 
       const cameraPositions = [
-        { x: 0, y: 30,  z: 300  },
-        { x: 0, y: 40,  z: -50  },
-        { x: 0, y: 50,  z: -700 },
+        { x: 0, y: 30, z: 300 },
+        { x: 0, y: 40, z: -50 },
+        { x: 0, y: 50, z: -700 },
       ];
 
-      const currentPos = cameraPositions[newSection]     ?? cameraPositions[0];
-      const nextPos    = cameraPositions[newSection + 1] ?? currentPos;
+      const currentPos = cameraPositions[newSection] ?? cameraPositions[0];
+      const nextPos = cameraPositions[newSection + 1] ?? currentPos;
 
       refs.targetCameraX = currentPos.x + (nextPos.x - currentPos.x) * sectionProgress;
       refs.targetCameraY = currentPos.y + (nextPos.y - currentPos.y) * sectionProgress;
       refs.targetCameraZ = currentPos.z + (nextPos.z - currentPos.z) * sectionProgress;
 
       refs.mountains.forEach((m: any, i: number) => {
-        const speed   = 1 + i * 0.9;
+        const speed = 1 + i * 0.9;
         const targetZ = m.userData.baseZ + scrollY * speed * 0.5;
 
         if (refs.nebula) {
@@ -994,7 +994,9 @@ export default function Portfolio() {
             </p>
 
             <a
-              href="mailto:upasanaprabhakar35@gmail.com"
+              href="https://mail.google.com/mail/?view=cm&to=upasanaprabhakar35@gmail.com"
+              target="_blank"
+              rel="noreferrer"
               className="contact-beacon"
             >
               <span className="contact-beacon-pulse" />
