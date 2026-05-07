@@ -1,0 +1,915 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap');
+
+/* ─── Reset ─────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: #000814;
+  color: #f0f4ff;
+  overflow-x: hidden;
+  cursor: none; /* hide default cursor — replaced by CustomCursor */
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #000814; }
+::-webkit-scrollbar-thumb { background: #1a3a6a; border-radius: 2px; }
+::selection { background: rgba(79, 142, 247, 0.3); }
+
+/* ─── Custom Cursor ──────────────────────────────────────────────────────── */
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: #4f8ef7;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #4f8ef7, 0 0 20px rgba(79, 142, 247, 0.4);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: screen;
+}
+
+.cursor-dot.cursor-hover {
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  box-shadow: 0 0 16px #4f8ef7, 0 0 32px rgba(79, 142, 247, 0.6);
+}
+
+.cursor-trail {
+  position: fixed;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(79, 142, 247, 0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  /* trail lags behind — handled in JS */
+}
+
+/* ─── Navigation Dots ────────────────────────────────────────────────────── */
+.nav-dots {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.nav-dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: none;
+  padding: 0;
+}
+
+.nav-dot::after {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(79, 142, 247, 0.28);
+  border: 1px solid rgba(79, 142, 247, 0.35);
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+  flex-shrink: 0;
+}
+
+.nav-dot.active::after {
+  background: #4f8ef7;
+  transform: scale(1.5);
+  box-shadow: 0 0 8px rgba(79, 142, 247, 0.6);
+}
+
+.nav-dot-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(79, 142, 247, 0.35);
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.2s, transform 0.2s, color 0.2s;
+  pointer-events: none;
+}
+
+.nav-dot:hover .nav-dot-label,
+.nav-dot.active .nav-dot-label {
+  opacity: 1;
+  transform: translateX(0);
+  color: rgba(79, 142, 247, 0.75);
+}
+
+@media (max-width: 768px) {
+  .nav-dots { display: none; }
+}
+
+/* ─── Spiral intro overlay ───────────────────────────────────────────────── */
+.spiral-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000;
+  transition: opacity 0.7s ease;
+}
+.spiral-overlay.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ─── Fixed Three.js canvas ──────────────────────────────────────────────── */
+.portfolio-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ─── Side menu ──────────────────────────────────────────────────────────── */
+.side-menu {
+  position: fixed;
+  left: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: none;
+}
+
+.menu-icon span {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
+  transition: background 0.2s;
+}
+
+.menu-icon:hover span {
+  background: rgba(79, 142, 247, 0.9);
+}
+
+.vertical-text {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.38em;
+  color: rgba(79, 142, 247, 0.4);
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  margin-top: 8px;
+}
+
+/* ─── Scroll progress indicator ──────────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  bottom: 40px;
+  right: 36px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.scroll-text {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.38em;
+  color: rgba(79, 142, 247, 0.4);
+  text-transform: uppercase;
+}
+
+.progress-track {
+  width: 80px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: rgba(79, 142, 247, 0.7);
+  transition: width 0.1s linear;
+}
+
+.section-counter {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: rgba(79, 142, 247, 0.35);
+}
+
+/* ─── Hero ───────────────────────────────────────────────────────────────── */
+.hero-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 clamp(32px, 6vw, 96px) 80px;
+}
+
+/* ─── Shared content sections ────────────────────────────────────────────── */
+.content-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(32px, 6vw, 96px) 80px clamp(32px, 6vw, 96px);
+  background: rgba(0, 8, 20, 0.60);
+  backdrop-filter: blur(2px);
+}
+
+.section-inner {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Section eyebrow */
+.section-eyebrow {
+  font-family: "JetBrains Mono", "DM Mono", monospace;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: rgba(79, 142, 247, 0.75);
+  margin-bottom: 56px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.section-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(79, 142, 247, 0.15);
+}
+
+/* ─── About ──────────────────────────────────────────────────────────────── */
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.about-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-headline {
+  font-family: "Clash Display", "Syne", sans-serif;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #f0f4ff;
+  margin-bottom: 8px;
+}
+
+.about-headline-accent {
+  color: #4f8ef7;
+}
+
+.about-text {
+  font-family: "JetBrains Mono", "DM Mono", monospace;
+  font-size: clamp(0.88rem, 1.2vw, 1rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+}
+
+.about-inline-highlight {
+  font-weight: 600;
+  color: #818cf8;
+}
+
+.about-stats {
+  display: flex;
+  gap: 36px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.about-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.about-stat-num {
+  font-family: "Clash Display", "Syne", sans-serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  color: #4f8ef7;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.about-stat-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.38);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.about-highlight {
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  color: #818cf8;
+}
+
+@media (max-width: 900px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* ─── Experience card ────────────────────────────────────────────────────── */
+.exp-card {
+  margin-top: 56px;
+  padding: 34px 38px;
+  border: 1px solid rgba(129, 140, 248, 0.14);
+  background: rgba(6, 10, 30, 0.7);
+  backdrop-filter: blur(8px);
+  max-width: 100%;
+}
+
+.exp-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.36em;
+  color: #818cf8;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.exp-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 700;
+  color: #f0f4ff;
+  margin-bottom: 6px;
+}
+
+.exp-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #818cf8;
+  margin-bottom: 18px;
+  letter-spacing: 0.08em;
+}
+
+.exp-bullet {
+  display: flex;
+  gap: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.82;
+  margin-bottom: 10px;
+}
+
+.exp-bullet-dot {
+  color: #818cf8;
+  flex-shrink: 0;
+  margin-top: 3px;
+  font-size: 0.5rem;
+}
+
+/* ─── Skills ─────────────────────────────────────────────────────────────── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 2px;
+}
+
+/* Glassmorphism skill card */
+.skill-card {
+  padding: 26px 30px;
+  background: rgba(10, 20, 50, 0.55);
+  border: 1px solid rgba(79, 142, 247, 0.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(79, 142, 247, 0.08),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.skill-card:hover {
+  background: rgba(14, 28, 68, 0.72);
+  border-color: rgba(79, 142, 247, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(79, 142, 247, 0.14),
+    0 0 24px rgba(79, 142, 247, 0.06);
+}
+
+.skill-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.36em;
+  color: #818cf8;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.skill-value {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 2;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Projects ───────────────────────────────────────────────────────────── */
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Glassmorphism project card */
+.project-card {
+  padding: 40px 44px;
+  background: rgba(6, 12, 32, 0.62);
+  border: 1px solid rgba(79, 142, 247, 0.10);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    inset 0 1px 0 rgba(79, 142, 247, 0.07),
+    inset 0 -1px 0 rgba(0,0,0,0.25);
+  transition: border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+}
+
+.project-card:hover {
+  background: rgba(8, 18, 48, 0.82);
+  border-color: rgba(79, 142, 247, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(79, 142, 247, 0.12),
+    0 0 40px rgba(79, 142, 247, 0.07),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.project-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.project-title {
+  font-family: "Clash Display", "Syne", sans-serif;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.project-award {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.project-year {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.project-role-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.project-role-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.project-role-tag:not(:last-child)::after {
+  content: ' ·';
+  color: rgba(255, 255, 255, 0.2);
+  margin-left: 10px;
+}
+
+.project-tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.project-tech-chip {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid;
+  border-radius: 0;
+}
+
+.project-divider {
+  height: 1px;
+  margin-bottom: 24px;
+}
+
+.project-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+}
+
+.project-bullet {
+  display: flex;
+  gap: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.82;
+  margin-bottom: 12px;
+  letter-spacing: 0.015em;
+}
+
+.project-bullet-marker {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  margin-top: 3px;
+}
+
+.project-link {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid;
+  padding: 8px 18px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.project-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ─── Certifications ─────────────────────────────────────────────────────── */
+.cert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Glassmorphism cert card */
+.cert-card {
+  padding: 28px 34px;
+  border: 1px solid rgba(79, 142, 247, 0.10);
+  background: rgba(6, 12, 32, 0.60);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    inset 0 1px 0 rgba(79, 142, 247, 0.07),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 24px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.cert-card:hover {
+  background: rgba(8, 18, 48, 0.78);
+  border-color: rgba(79, 142, 247, 0.22);
+}
+
+.cert-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(1.1rem, 2.1vw, 1.4rem);
+  font-weight: 700;
+  color: #f0f4ff;
+  letter-spacing: -0.01em;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.cert-date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(79, 142, 247, 0.6);
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  padding-top: 3px;
+}
+
+.cert-org {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #4f8ef7;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.cert-desc {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.78;
+  letter-spacing: 0.02em;
+  grid-column: 1 / -1;
+  grid-row: 3;
+  margin-top: 10px;
+}
+
+.cert-link {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #4f8ef7;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(79, 142, 247, 0.35);
+  padding-bottom: 2px;
+  grid-column: 1 / -1;
+  grid-row: 4;
+  margin-top: 14px;
+  width: fit-content;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.cert-link:hover {
+  color: #fff;
+  border-color: #4f8ef7;
+}
+
+/* ─── Contact ────────────────────────────────────────────────────────────── */
+.contact-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px clamp(32px, 6vw, 96px);
+  background: rgba(0, 6, 16, 0.35);
+  backdrop-filter: blur(1px);
+  border-top: 1px solid rgba(79, 142, 247, 0.08);
+  text-align: center;
+}
+
+.contact-headline {
+  font-family: "Clash Display", "Syne", sans-serif;
+  font-size: clamp(2.8rem, 8vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #f0f4ff;
+  line-height: 0.94;
+  margin-bottom: 28px;
+}
+
+.contact-sub {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(122, 163, 232, 0.65);
+  letter-spacing: 0.06em;
+  max-width: 460px;
+  margin: 0 auto 48px;
+  line-height: 1.9;
+}
+
+/* ── Contact beacon CTA ──────────────────────────────────────────────────── */
+.contact-beacon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 56px;
+  padding: 18px 42px;
+  background: rgba(6, 18, 52, 0.75);
+  border: 1px solid rgba(79, 142, 247, 0.35);
+  text-decoration: none;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 32px rgba(79, 142, 247, 0.12),
+    inset 0 1px 0 rgba(79, 142, 247, 0.12);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  overflow: visible;
+}
+
+.contact-beacon:hover {
+  background: rgba(10, 28, 76, 0.88);
+  border-color: rgba(79, 142, 247, 0.7);
+  box-shadow:
+    0 0 60px rgba(79, 142, 247, 0.22),
+    0 0 120px rgba(79, 142, 247, 0.08),
+    inset 0 1px 0 rgba(79, 142, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Pulsing dot in top-left of beacon */
+.contact-beacon-pulse {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4f8ef7;
+  box-shadow: 0 0 8px #4f8ef7, 0 0 16px rgba(79, 142, 247, 0.6);
+  animation: beacon-pulse 2s ease-in-out infinite;
+}
+
+/* Expanding ring around the pulse dot */
+.contact-beacon-ring {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(79, 142, 247, 0.6);
+  animation: beacon-ring 2s ease-in-out infinite;
+}
+
+@keyframes beacon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(0.85); }
+}
+
+@keyframes beacon-ring {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+.contact-beacon-text {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c8dcff;
+  transition: color 0.3s;
+}
+
+.contact-beacon:hover .contact-beacon-text {
+  color: #fff;
+}
+
+.contact-beacon-arrow {
+  font-size: 1.1rem;
+  color: #4f8ef7;
+  transition: transform 0.3s, color 0.3s;
+}
+
+.contact-beacon:hover .contact-beacon-arrow {
+  transform: translate(3px, -3px);
+  color: #fff;
+}
+
+/* ─── Contact links (secondary) ──────────────────────────────────────────── */
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 0;
+}
+
+.contact-link {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #4f8ef7;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(79, 142, 247, 0.3);
+  padding-bottom: 3px;
+  margin: 0 20px 12px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.contact-link:hover {
+  color: #fff;
+  border-color: #4f8ef7;
+}
+
+.contact-footer {
+  margin-top: 80px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(79, 142, 247, 0.3);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero-section { padding: 0 24px 60px; }
+  .content-section { padding: 72px 24px; }
+  .side-menu { display: none; }
+  .scroll-progress { right: 16px; bottom: 24px; }
+
+  .project-card { padding: 28px 24px; }
+  .project-card-header { flex-direction: column; gap: 6px; }
+
+  .cert-card { grid-template-columns: 1fr; }
+  .cert-date { grid-column: 1; grid-row: 2; }
+  .cert-org  { grid-row: 3; }
+  .cert-desc { grid-row: 4; }
+  .cert-link { grid-row: 5; }
+
+  .contact-beacon { padding: 14px 28px; }
+  .nav-dots { display: none; }
+
+  /* Show default cursor on mobile */
+  body { cursor: auto; }
+  .cursor-dot, .cursor-trail { display: none; }
+}
