@@ -6,13 +6,14 @@
 
 ## ✦ Live Demo
 
-**[upasanaprabhakar.vercel.app](https://upasanaprabhakar.vercel.app)** &nbsp;·&nbsp; *Best experienced on desktop*
+**[upasanaprabhakar.vercel.app](https://portfolio-website-dwae.vercel.app/)** &nbsp;·&nbsp; *Best experienced on desktop*
 
-&nbsp;
+
 
 ## ✦ Preview
 
-![Portfolio Hero — Upasana Prabhakar](./preview.png)
+<img width="1919" height="908" alt="Screenshot 2026-05-07 180230" src="https://github.com/user-attachments/assets/a49b0132-b63c-4171-b28b-5ab3ffd7b5e0" />
+
 
 &nbsp;
 
